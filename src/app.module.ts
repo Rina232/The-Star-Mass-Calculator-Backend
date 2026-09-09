@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ServicesModule } from './services/services.module';
+import { StarClassesModule } from './star-classes/star-classes.module';
 
 @Module({
-  imports: [ServicesModule],
+  imports: [StarClassesModule],
 })
 export class AppModule {}

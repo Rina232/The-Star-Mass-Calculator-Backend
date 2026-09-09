@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Добавить — {{service.title}}</title>
+<title>Добавить — {{starClass.title}}</title>
 <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -15,33 +15,32 @@
       <div class="form-panel">
         <h1 class="form-title">Добавление нового<br>класса</h1>
 
-
         <form id="addForm">
           <div class="field">
             <label for="name">Название</label>
-            <input type="text" id="name" placeholder="Спектральный класс O" value="{{service.title}}">
+            <input type="text" id="name" placeholder="Спектральный класс O" value="{{starClass.title}}">
           </div>
 
           <div class="field">
             <label for="temp">Средняя масса (M⨀)</label>
-            <input type="text" id="temp" placeholder="25" value="{{service.mass}}">
+            <input type="text" id="temp" placeholder="25" value="{{starClass.mass}}">
           </div>
 
           <div class="field">
             <label for="color">Средняя светимость (L⨀)</label>
-            <input type="text" id="color" placeholder="80 000" value="{{service.luminosity}}">
+            <input type="text" id="color" placeholder="80 000" value="{{starClass.luminosity}}">
           </div>
 
           <div class="field">
             <label for="desc">Описание</label>
-            <textarea id="desc" placeholder="Спектральный класс O - самые горячие, массивные и яркие звёзды.">{{service.description}}</textarea>
+            <textarea id="desc" placeholder="Спектральный класс O - самые горячие, массивные и яркие звёзды.">{{starClass.description}}</textarea>
           </div>
 
           <div class="field">
             <label>Медиа</label>
 
             <div class="media-preview-row">
-              <img class="media-preview-img" src="{{imageUrl}}" alt="{{service.title}}">
+              <img class="media-preview-img" src="{{imageUrl}}" alt="{{starClass.title}}">
               {{#if videoUrl}}
               <video class="media-preview-video" src="{{videoUrl}}" muted loop autoplay playsinline></video>
               {{/if}}

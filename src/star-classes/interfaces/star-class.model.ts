@@ -1,7 +1,6 @@
-export type ServiceStatus = 'draft' | 'published' | 'deleted';
+export type StarClassStatus = 'draft' | 'published' | 'deleted';
 
-
-export interface StarService {
+export interface StarClass {
   id: number;
   title: string;
   description: string;
@@ -9,6 +8,6 @@ export interface StarService {
   luminosity: number;
   imageKey: string;
   videoKey: string;
-  status: ServiceStatus;
+  status: StarClassStatus;
   likedByUserIds: number[];
 }

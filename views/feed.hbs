@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Лента — {{service.title}}</title>
+<title>Лента — {{starClass.title}}</title>
 <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -17,11 +17,9 @@
         {{#if videoUrl}}<source src="{{videoUrl}}" type="video/mp4">{{/if}}
       </video>
 
-
-      <img class="feed-poster" src="{{imageUrl}}" alt="{{service.title}}">
+      <img class="feed-poster" src="{{imageUrl}}" alt="{{starClass.title}}">
 
       <div class="feed-overlay-actions">
-
 
         <input type="checkbox" id="likeToggle" class="like-toggle-checkbox">
 
@@ -31,11 +29,10 @@
             </svg>
         </label>
 
-
         <span class="like-count like-count-base">{{likeCount}}</span>
         <span class="like-count like-count-liked">{{likeCountPlusOne}}</span>
 
-        <a class="icon-btn" href="/feed/{{service.id}}?next=true" aria-label="Следующая услуга">
+        <a class="icon-btn" href="/feed/{{starClass.id}}?next=true" aria-label="Следующая услуга">
             <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M24 10V38M10 24L24 38L38 24" stroke="#DCEBFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -43,18 +40,17 @@
       </div>
 
       <div class="feed-bottom-gradient">
-        <h1 class="feed-title">{{service.title}}</h1>
-
+        <h1 class="feed-title">{{starClass.title}}</h1>
 
         <div class="feed-desc-wrap">
           <input type="checkbox" id="descToggle" class="desc-toggle-checkbox">
 
-          <p class="feed-desc">{{service.description}}</p>
+          <p class="feed-desc">{{starClass.description}}</p>
 
           <div class="feed-desc-extra">
             <p class="feed-meta">
-              Средняя масса: {{service.mass}} M⨀<br>
-              Средняя светимость: {{service.luminosity}} L⨀
+              Средняя масса: {{starClass.mass}} M⨀<br>
+              Средняя светимость: {{starClass.luminosity}} L⨀
             </p>
           </div>
 
