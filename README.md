@@ -1,1 +1,1 @@
-# The-Star-Mass-Calculator-Backend
+# Design and Templating (Lab 1)
