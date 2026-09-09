@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Каталог — Звёзды</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<div class="app-frame">
+
+  <div class="screen-content">
+    <section class="catalog-screen">
+
+      <div class="catalog-header">
+        <h1 class="catalog-title">Каталог</h1>
+
+        <form class="search-block" action="/catalog" method="GET">
+          <div class="search-label">ПОИСК ПО СВЕТИМОСТИ</div>
+          <div class="search-row">
+            <input type="text" name="min" placeholder="От (L⨀)" value="{{filters.min}}">
+            <input type="text" name="max" placeholder="До (L⨀)" value="{{filters.max}}">
+            <button class="search-btn" type="submit">
+              Найти
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2.49988 15.5001L5.75488 12.2451M4 8C4 11.3137 6.68629 14 10 14C13.3137 14 16 11.3137 16 8C16 4.68629 13.3137 2 10 2C6.68629 2 4 4.68629 4 8Z" stroke="#D4A832" stroke-opacity="0.85" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="catalog-grid">
+        {{#each items}}
+        <a class="card" href="/feed/{{this.service.id}}">
+          <img class="card-thumb-img" src="{{this.imageUrl}}" alt="{{this.service.title}}">
+          <div class="card-like">
+            <svg width="29" height="25" viewBox="0 0 29 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M25.918 3.03337C25.2582 2.38874 24.4749 1.87736 23.6128 1.52847C22.7507 1.17958 21.8266 1.00001 20.8934 1.00001C19.9601 1.00001 19.0361 1.17958 18.1739 1.52847C17.3118 1.87736 16.5285 2.38874 15.8687 3.03337L14.4996 4.37059L13.1304 3.03337C11.7978 1.73186 9.99039 1.00068 8.10579 1.00068C6.2212 1.00068 4.41379 1.73186 3.08118 3.03337C1.74857 4.33488 0.99992 6.10011 0.99992 7.94072C0.99992 9.78134 1.74857 11.5466 3.08118 12.8481L14.4996 24L25.918 12.8481C26.578 12.2037 27.1016 11.4387 27.4588 10.5967C27.8161 9.75467 27.9999 8.85216 27.9999 7.94072C27.9999 7.02928 27.8161 6.12678 27.4588 5.28476C27.1016 4.44274 26.578 3.67771 25.918 3.03337Z" stroke="#DCEBFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>{{this.likeCount}}</span>
+          </div>
+          <div class="card-body">
+            <p class="card-name">{{this.service.title}}</p>
+            <span class="card-btn">Подробнее</span>
+          </div>
+        </a>
+        {{else}}
+        <p class="catalog-empty">По заданным параметрам ничего не найдено.</p>
+        {{/each}}
+      </div>
+    </section>
+  </div>
+
+  {{> toolbar }}
+
+</div>
+</body>
+</html>

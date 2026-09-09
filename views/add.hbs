@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Добавить — {{service.title}}</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<div class="app-frame">
+
+  <div class="screen-content">
+    <section class="form-screen">
+      <div class="form-panel">
+        <h1 class="form-title">Добавление нового<br>класса</h1>
+
+
+        <form id="addForm">
+          <div class="field">
+            <label for="name">Название</label>
+            <input type="text" id="name" placeholder="Спектральный класс O" value="{{service.title}}">
+          </div>
+
+          <div class="field">
+            <label for="temp">Средняя масса (M⨀)</label>
+            <input type="text" id="temp" placeholder="25" value="{{service.mass}}">
+          </div>
+
+          <div class="field">
+            <label for="color">Средняя светимость (L⨀)</label>
+            <input type="text" id="color" placeholder="80 000" value="{{service.luminosity}}">
+          </div>
+
+          <div class="field">
+            <label for="desc">Описание</label>
+            <textarea id="desc" placeholder="Спектральный класс O - самые горячие, массивные и яркие звёзды.">{{service.description}}</textarea>
+          </div>
+
+          <div class="field">
+            <label>Медиа</label>
+
+            <div class="media-preview-row">
+              <img class="media-preview-img" src="{{imageUrl}}" alt="{{service.title}}">
+              {{#if videoUrl}}
+              <video class="media-preview-video" src="{{videoUrl}}" muted loop autoplay playsinline></video>
+              {{/if}}
+            </div>
+
+            <div class="media-row">
+              <button type="button" class="media-btn">
+                Фото
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 9.52662H18.9508M9.97538 1V18.0532" stroke="#8CB4FF" stroke-opacity="0.85" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+
+              </button>
+              <button type="button" class="media-btn">
+                Видео
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 9.52662H18.9508M9.97538 1V18.0532" stroke="#8CB4FF" stroke-opacity="0.85" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+
+              </button>
+            </div>
+          </div>
+
+          <button class="save-btn">Сохранить</button>
+        </form>
+      </div>
+
+    </section>
+  </div>
+
+  {{> toolbar }}
+
+</div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Лента — {{service.title}}</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<div class="app-frame">
+
+  <div class="screen-content">
+    <section class="feed-screen">
+
+      <video class="feed-video" autoplay muted loop playsinline poster="{{imageUrl}}">
+        {{#if videoUrl}}<source src="{{videoUrl}}" type="video/mp4">{{/if}}
+      </video>
+
+
+      <img class="feed-poster" src="{{imageUrl}}" alt="{{service.title}}">
+
+      <div class="feed-overlay-actions">
+
+
+        <input type="checkbox" id="likeToggle" class="like-toggle-checkbox">
+
+        <label for="likeToggle" class="icon-btn" aria-label="Лайк">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M41.68 9.21999C40.6585 8.198 39.4456 7.38728 38.1107 6.83416C36.7758 6.28103 35.345 5.99634 33.9 5.99634C32.455 5.99634 31.0242 6.28103 29.6893 6.83416C28.3544 7.38728 27.1415 8.198 26.12 9.21999L24 11.34L21.88 9.21999C19.8166 7.15661 17.0181 5.99741 14.1 5.99741C11.1819 5.99741 8.38338 7.15661 6.31999 9.21999C4.25661 11.2834 3.09741 14.0819 3.09741 17C3.09741 19.9181 4.25661 22.7166 6.31999 24.78L24 42.46L41.68 24.78C42.702 23.7585 43.5127 22.5456 44.0658 21.2107C44.6189 19.8758 44.9036 18.445 44.9036 17C44.9036 15.555 44.6189 14.1242 44.0658 12.7893C43.5127 11.4544 42.702 10.2415 41.68 9.21999Z" stroke="#DCEBFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </label>
+
+
+        <span class="like-count like-count-base">{{likeCount}}</span>
+        <span class="like-count like-count-liked">{{likeCountPlusOne}}</span>
+
+        <a class="icon-btn" href="/feed/{{service.id}}?next=true" aria-label="Следующая услуга">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M24 10V38M10 24L24 38L38 24" stroke="#DCEBFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </a>
+      </div>
+
+      <div class="feed-bottom-gradient">
+        <h1 class="feed-title">{{service.title}}</h1>
+
+
+        <div class="feed-desc-wrap">
+          <input type="checkbox" id="descToggle" class="desc-toggle-checkbox">
+
+          <p class="feed-desc">{{service.description}}</p>
+
+          <div class="feed-desc-extra">
+            <p class="feed-meta">
+              Средняя масса: {{service.mass}} M⨀<br>
+              Средняя светимость: {{service.luminosity}} L⨀
+            </p>
+          </div>
+
+          <label for="descToggle" class="desc-more-label">ещё…</label>
+          <label for="descToggle" class="desc-less-label">свернуть</label>
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  {{> toolbar }}
+
+</div>
+</body>
+</html>
