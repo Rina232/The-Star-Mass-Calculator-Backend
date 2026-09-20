@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
-import { StarClassesController } from './star-classes.controller';
-import { StarClassesService } from './star-classes.service';
+import { Module } from "@nestjs/common";
+import { star_classes_controller } from "./star-classes.controller";
+import { star_classes_service } from "./star-classes.service";
 
 @Module({
-  controllers: [StarClassesController],
-  providers: [StarClassesService],
+    controllers: [star_classes_controller],
+    providers: [star_classes_service],
 })
-export class StarClassesModule {}
+export class star_classes_module {}
