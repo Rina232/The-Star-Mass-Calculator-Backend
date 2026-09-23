@@ -1,9 +1,14 @@
 import { Injectable } from "@nestjs/common";
-import { star_class } from "./interfaces/star-class.model";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { star_class } from "./entities/star-class.entity";
+import { star_class_like } from "./entities/star-class-like.entity";
 
-const MINIO_BASE_URL = "http://localhost:9000/media";
+export const CURRENT_USER_ID = 1;
 
-// Юникод-символы для степени (надстрочные цифры), чтобы вывести "10⁴" как текст
+const DEFAULT_IMAGE_URL = "/default/star-class-default.jpg";
+const DEFAULT_VIDEO_URL = "/default/star-class-default.mp4";
+
 const SUPERSCRIPT_DIGITS: Record<string, string> = {
     "0": "⁰",
     "1": "¹",
@@ -27,179 +32,149 @@ function toSuperscript(value: number): string {
 
 @Injectable()
 export class star_classes_service {
-    private readonly star_classes: star_class[] = [
-        {
-            id: 1,
-            title: "Спектральный класс O",
-            description:
-                "Класс O - самые горячие и массивные звёзды с голубовато-белым цветом. Обладают огромной светимостью и высокой температурой поверхности.",
-            mass: 25,
-            luminosity: 80000,
-            imageKey: "O-Type.png",
-            videoKey: "O-Type.mp4",
-            status: "published",
-            likedByUserIds: [1, 2, 5, 6, 7, 32, 67, 68, 77, 89, 95, 101, 204, 305],
-        },
-        {
-            id: 2,
-            title: "Спектральный класс B",
-            description:
-                "Класс B - горячие голубовато-белые звёзды, уступающие классу O по температуре и массе. Отличаются высокой светимостью и относительно короткой продолжительностью жизни.",
-            mass: 10,
-            luminosity: 25000,
-            imageKey: "B-Type.jpg",
-            videoKey: "B-Type.mp4",
-            status: "published",
-            likedByUserIds: [5, 7, 8, 22, 23, 25, 34, 37, 45, 47, 48, 99, 190, 193, 195, 197, 201, 202, 203, 204],
-        },
-        {
-            id: 3,
-            title: "Спектральный класс A",
-            description:
-                "Класс A - белые звёзды с высокой температурой поверхности. В их спектрах особенно заметны линии поглощения водорода.",
-            mass: 2.1,
-            luminosity: 40,
-            imageKey: "A-Type.jpg",
-            videoKey: "A-Type.mp4",
-            status: "published",
-            likedByUserIds: [7, 8, 22, 23, 25, 34, 37, 45, 47, 48, 99, 190, 193],
-        },
-        {
-            id: 4,
-            title: "Спектральный класс F",
-            description: "Класс F - жёлто-белые звёзды со средней температурой поверхности. Они холоднее звёзд класса A, но горячее звёзд класса G.",
-            mass: 1.3,
-            luminosity: 6,
-            imageKey: "F-Type.png",
-            videoKey: "F-Type.mp4",
-            status: "published",
-            likedByUserIds: [7, 8, 22, 23, 25, 34, 37, 45, 47, 48, 99, 101, 190, 193, 305, 389],
-        },
-        {
-            id: 5,
-            title: "Спектральный класс G",
-            description:
-                "Класс G - жёлтые звёзды умеренной температуры. К этому классу относится Солнце, поэтому он хорошо изучен астрономами.",
-            mass: 1,
-            luminosity: 1,
-            imageKey: "G-Type.jpg",
-            videoKey: "G-Type.mp4",
-            status: "published",
-            likedByUserIds: [45, 47, 48, 101, 204],
-        },
-        {
-            id: 6,
-            title: "Спектральный класс K",
-            description: "Класс K - оранжевые звёзды, холоднее Солнца и класса G. Обычно они менее массивны и светимы, чем звёзды классов F и G.",
-            mass: 0.7,
-            luminosity: 0.4,
-            imageKey: "K-Type.jpg",
-            videoKey: "K-Type.mp4",
-            status: "published",
-            likedByUserIds: [34, 37, 45, 47, 48, 99, 55, 203, 296, 305, 467],
-        },
-        {
-            id: 7,
-            title: "Спектральный класс M",
-            description:
-                "Класс M - красные карлики, самый многочисленный класс звёзд во Вселенной.",
-            mass: 0.3,
-            luminosity: 0.01,
-            imageKey: "M-Type.jpg",
-            videoKey: "M-Type.mp4",
-            status: "draft",
-            likedByUserIds: [37, 45, 47, 48, 99],
-        },
-        {
-            id: 8,
-            title: "Спектральный класс W",
-            description: 'Тестовая услуга для демонстрации статуса "удалён".',
-            mass: 0,
-            luminosity: 0,
-            imageKey: "W-Type.png",
-            videoKey: "",
-            status: "deleted",
-            likedByUserIds: [25, 34, 37, 45, 47, 48, 99, 101, 190, 193, 305, 389],
-        },
-    ];
+    constructor(
+        @InjectRepository(star_class)
+        private readonly starClassRepository: Repository<star_class>,
+        @InjectRepository(star_class_like)
+        private readonly likeRepository: Repository<star_class_like>,
+    ) {}
 
-    private published(): star_class[] {
-        return this. star_classes
-            .filter((s) => s.status === "published")
-            .sort((a, b) => a.id - b.id);
-    }
 
-    findFirstPublished(): star_class | undefined {
-        return this.published()[0];
-    }
-
-    findPublishedById(id: number): star_class | undefined {
-        return this.published().find((s) => s.id === id);
-    }
-
-    findNextPublished(afterId: number): star_class | undefined {
-        const list = this.published();
-        const index = list.findIndex((s) => s.id === afterId);
-        if (index === -1) return list[0];
-        return list[(index + 1) % list.length];
-    }
-
-    findDraft(): star_class | undefined {
-        return this. star_classes.find((s) => s.status === "draft");
-    }
-
-    findAllPublished(
-        minMass?: number,
-        maxMass?: number,
-    ): star_class[] {
-        return this.published().filter((s) => {
-            if (
-                minMass !== undefined &&
-                !Number.isNaN(minMass) &&
-                s.mass < minMass
-            ) {
-                return false;
-            }
-            if (
-                maxMass !== undefined &&
-                !Number.isNaN(maxMass) &&
-                s.mass > maxMass
-            ) {
-                return false;
-            }
-            return true;
+    async findFirstPublished(): Promise<star_class | null> {
+        return this.starClassRepository.findOne({
+            where: { star_class_status: "published" },
+            order: { star_class_id: "ASC" },
         });
     }
 
-    getLikeCount(star_class: star_class): number {
-        return star_class.likedByUserIds.length;
+    async findPublishedById(id: number): Promise<star_class | null> {
+        return this.starClassRepository.findOne({
+            where: { star_class_id: id, star_class_status: "published" },
+        });
     }
 
-    getImageUrl(star_class: star_class): string {
-        return `${MINIO_BASE_URL}/${star_class.imageKey}`;
+    async findNextPublished(afterId: number): Promise<star_class | null> {
+        const list = await this.starClassRepository.find({
+            where: { star_class_status: "published" },
+            order: { star_class_id: "ASC" },
+        });
+        if (list.length === 0) {
+            return null;
+        }
+        const index = list.findIndex((s) => s.star_class_id === afterId);
+        if (index === -1) {
+            return list[0];
+        }
+        return list[(index + 1) % list.length];
     }
 
-    getVideoUrl(star_class: star_class): string {
-        return star_class.videoKey
-            ? `${MINIO_BASE_URL}/${star_class.videoKey}`
-            : "";
+    async findAllPublished(minMass?: number, maxMass?: number): Promise<star_class[]> {
+        const qb = this.starClassRepository
+            .createQueryBuilder("sc")
+            .where("sc.star_class_status = :status", { status: "published" });
+
+        if (minMass !== undefined && !Number.isNaN(minMass)) {
+            qb.andWhere("sc.star_class_mass >= :minMass", { minMass });
+        }
+        if (maxMass !== undefined && !Number.isNaN(maxMass)) {
+            qb.andWhere("sc.star_class_mass <= :maxMass", { maxMass });
+        }
+
+        return qb.orderBy("sc.star_class_id", "ASC").getMany();
+    }
+
+    async findDraftForCurrentUser(): Promise<star_class | null> {
+        return this.starClassRepository.findOne({
+            where: { star_class_status: "draft", star_class_creator_id: CURRENT_USER_ID },
+        });
+    }
+
+    async createDraft(title: string): Promise<star_class> {
+        const draft = this.starClassRepository.create({
+            star_class_title: title,
+            star_class_description: "",
+            star_class_status: "draft",
+            star_class_image_url: "",
+            star_class_video_url: "",
+            star_class_mass: 0,
+            star_class_luminosity: 0,
+            star_class_creator_id: CURRENT_USER_ID,
+        });
+        return this.starClassRepository.save(draft);
+    }
+
+    async publishDraft(
+        id: number,
+        description: string,
+        mass: number,
+        luminosity: number,
+    ): Promise<void> {
+        await this.starClassRepository.update(
+            { star_class_id: id, star_class_creator_id: CURRENT_USER_ID, star_class_status: "draft" },
+            {
+                star_class_description: description,
+                star_class_mass: mass,
+                star_class_luminosity: luminosity,
+                star_class_status: "published",
+                star_class_published_at: new Date(),
+            },
+        );
+    }
+
+    async deleteStarClass(id: number): Promise<void> {
+        await this.starClassRepository.query(
+            `UPDATE star_classes SET star_class_status = $1 WHERE star_class_id = $2`,
+            ["deleted", id],
+        );
+    }
+
+
+    async getLikeCount(starClassId: number): Promise<number> {
+        return this.likeRepository.count({ where: { star_class_id: starClassId } });
+    }
+
+    async hasCurrentUserLiked(starClassId: number): Promise<boolean> {
+        const existing = await this.likeRepository.findOne({
+            where: { star_class_user_id: CURRENT_USER_ID, star_class_id: starClassId },
+        });
+        return !!existing;
+    }
+
+
+    getImageUrl(sc: star_class): string {
+        return sc.star_class_image_url && sc.star_class_image_url.trim()
+            ? sc.star_class_image_url
+            : DEFAULT_IMAGE_URL;
+    }
+
+    getVideoUrl(sc: star_class): string {
+        return sc.star_class_video_url && sc.star_class_video_url.trim()
+            ? sc.star_class_video_url
+            : DEFAULT_VIDEO_URL;
+    }
+
+    getDefaultImageUrl(): string {
+        return DEFAULT_IMAGE_URL;
+    }
+
+    getDefaultVideoUrl(): string {
+        return DEFAULT_VIDEO_URL;
     }
 
     formatAstroNumber(value: number): string {
-        if (!value) {
+        const numericValue = Number(value);
+        if (!numericValue) {
             return "0";
         }
 
-        const integerDigitsCount = Math.floor(Math.abs(value))
-            .toString()
-            .length;
+        const integerDigitsCount = Math.floor(Math.abs(numericValue)).toString().length;
 
         if (integerDigitsCount <= 3) {
-            return Number(value.toFixed(2)).toString();
+            return Number(numericValue.toFixed(2)).toString();
         }
 
-        const exponent = Math.floor(Math.log10(Math.abs(value)));
-        const mantissa = Number((value / 10 ** exponent).toFixed(1));
+        const exponent = Math.floor(Math.log10(Math.abs(numericValue)));
+        const mantissa = Number((numericValue / 10 ** exponent).toFixed(1));
 
         return `${mantissa}×10${toSuperscript(exponent)}`;
     }

@@ -328,7 +328,7 @@ body {
     stroke-width: 1.8;
 }
 
-/*.save-btn {
+.save-btn {
     display: block;
     width: 100%;
     margin-top: 12px;
@@ -344,7 +344,7 @@ body {
 }
 .save-btn:hover {
     background: var(--gold-hover);
-}*/
+}
 
 .catalog-screen {
     padding: 0 18px 30px;
@@ -436,6 +436,37 @@ body {
     overflow: hidden;
     aspect-ratio: 1 / 1;
     display: block;
+}
+
+.card-link {
+    position: absolute;
+    inset: 0;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.card-delete-form {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 3;
+    margin: 0;
+}
+
+.card-delete-btn {
+    width: 26px;
+    height: 26px;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+}
+.card-delete-btn svg {
+    stroke: var(--text-main);
 }
 
 .card-thumb-img {
@@ -687,4 +718,11 @@ body {
     text-align: center;
     color: var(--text-side);
     padding: 30px 0;
+}
+
+.field-hint {
+    font-size: 11px;
+    color: var(--text-placeholder);
+    margin: 6px 0 0;
+    line-height: 1.4;
 }

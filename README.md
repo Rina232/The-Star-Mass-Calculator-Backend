@@ -1,1 +1,1 @@
-# Design and Templating (Lab 1)
+# Database development and connection (Lab 2)

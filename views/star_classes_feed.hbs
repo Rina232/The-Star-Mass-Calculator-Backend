@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Лента — {{star_class.title}}</title>
+        <title>Лента — {{star_class.star_class_title}}</title>
         <link rel="stylesheet" href="/star_class_styles.css" />
     </head>
     <body>
@@ -16,10 +16,10 @@
                         {{/if}}
                     </video>
 
-                    <img class="feed-poster" src="{{imageUrl}}" alt="{{star_class.title}}"/>
+                    <img class="feed-poster" src="{{imageUrl}}" alt="{{star_class.star_class_title}}"/>
 
                     <div class="feed-overlay-actions">
-                        <input type="checkbox" id="likeToggle" class="like-toggle-checkbox"/>
+                        <input type="checkbox" id="likeToggle" class="like-toggle-checkbox" {{#if alreadyLiked}}checked{{/if}}/>
 
                         <label for="likeToggle" class="like-btn">
                             <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -42,7 +42,7 @@
 
                         <span class="icon-desc">{{luminosityFormatted}}</span>
 
-                        <a class="icon-btn" href="/star_classes_feed/{{star_class.id}}?next=true">
+                        <a class="icon-btn" href="/star_classes_feed/{{star_class.star_class_id}}?next=true">
                             <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M24 10V38M10 24L24 38L38 24" stroke="#DCEBFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
@@ -50,12 +50,12 @@
                     </div>
 
                     <div class="feed-bottom-gradient">
-                        <h1 class="feed-title">{{star_class.title}}</h1>
+                        <h1 class="feed-title">{{star_class.star_class_title}}</h1>
 
                         <div class="feed-desc-wrap">
                             <input type="checkbox" id="descToggle" class="desc-toggle-checkbox" />
 
-                            <p class="feed-desc">{{star_class.description}}</p>
+                            <p class="feed-desc">{{star_class.star_class_description}}</p>
 
                             <label for="descToggle" class="desc-more-label">ещё…</label >
                             <label for="descToggle" class="desc-less-label">свернуть</label>

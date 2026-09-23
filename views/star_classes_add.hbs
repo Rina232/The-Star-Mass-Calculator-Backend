@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Добавить — {{star_class.title}}</title>
+        <title>Добавить</title>
         <link rel="stylesheet" href="/star_class_styles.css" />
     </head>
     <body>
@@ -11,14 +11,16 @@
             <div class="screen-content">
                 <section class="form-screen">
                     <div class="form-panel">
+
+                        {{#unless hasDraft}}
                         <h1 class="form-title"> Добавление нового<br/>класса </h1>
 
-                        <form id="addForm">
+                        <form id="addForm" action="/star_classes_add/create" method="POST">
                             <div class="field media-field">
                                 <label>Медиа</label>
 
                                 <div class="media-item">
-                                    <img class="media-preview-img" src="{{imageUrl}}" alt="{{star_class.title}}" />
+                                    <img class="media-preview-img" src="{{imageUrl}}"/>
 
                                     <input type="file" id="photoInput" name="photo" accept="image/*" class="media-file-input" />
                                     <label for="photoInput" class="media-btn"> Фото
@@ -29,11 +31,7 @@
                                 </div>
 
                                 <div class="media-item">
-                                    {{#if videoUrl}}
                                     <video class="media-preview-video" src="{{videoUrl}}" muted loop autoplay playsinline></video>
-                                    {{else}}
-                                    <div class="media-preview-video media-preview-empty"></div>
-                                    {{/if}}
 
                                     <input type="file" id="videoInput" name="video" accept="video/*" class="media-file-input" />
                                     <label for="videoInput" class="media-btn"> Видео
@@ -42,29 +40,73 @@
                                         </svg>
                                     </label>
                                 </div>
+
+                                <p class="field-hint">Новые фото и видео в этой работе не сохраняются на сервере — пока показана заглушка по умолчанию.</p>
                             </div>
 
                             <div class="field">
                                 <label for="name">Название</label>
-                                <input type="text" id="name" placeholder="Спектральный класс O" value="{{star_class.title}}"/>
+                                <input type="text" id="name" name="title" placeholder="Спектральный класс O" required />
                             </div>
 
-                            <div class="field">
-                                <label for="temp">Средняя масса (M⨀)</label>
-                                <input type="text" id="temp" placeholder="25" value="{{star_class.mass}}"/>
-                            </div>
-
-                            <div class="field">
-                                <label for="color">Средняя светимость (L⨀)</label>
-                                <input type="text" id="color" placeholder="80 000" value="{{star_class.luminosity}}" />
-                            </div>
-
-                            <div class="field">
-                                <label for="desc">Описание</label>
-                                <textarea id="desc" placeholder="Спектральный класс O - самые горячие, массивные и яркие звёзды.">{{star_class.description}}</textarea>
-                            </div>
-
+                            <button class="save-btn" type="submit">Далее</button>
                         </form>
+
+                        {{else}}
+                        <h1 class="form-title"> Добавление<br/>класса </h1>
+
+                        <form id="publishForm" action="/star_classes_add/publish" method="POST">
+                            <div class="field media-field">
+                                <label>Медиа</label>
+
+                                <div class="media-item">
+                                    <img class="media-preview-img" src="{{imageUrl}}" alt="{{star_class.star_class_title}}" />
+
+                                    <input type="file" id="photoInput" name="photo" accept="image/*" class="media-file-input" />
+                                    <label for="photoInput" class="media-btn"> Фото
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1 9.52662H18.9508M9.97538 1V18.0532" stroke="#8CB4FF" stroke-opacity="0.85" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                    </label>
+                                </div>
+
+                                <div class="media-item">
+                                    <video class="media-preview-video" src="{{videoUrl}}" muted loop autoplay playsinline></video>
+
+                                    <input type="file" id="videoInput" name="video" accept="video/*" class="media-file-input" />
+                                    <label for="videoInput" class="media-btn"> Видео
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1 9.52662H18.9508M9.97538 1V18.0532" stroke="#8CB4FF" stroke-opacity="0.85" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                    </label>
+                                </div>
+
+                                </div>
+
+                            <div class="field">
+                                <label for="name">Название</label>
+                                <input type="text" id="name" value="{{star_class.star_class_title}}" readonly />
+                            </div>
+
+                            <div class="field">
+                                <label for="desc">Краткое описание</label>
+                                <textarea id="desc" name="description" placeholder="Спектральный класс O - самые горячие, массивные и яркие звёзды."></textarea>
+                            </div>
+
+                            <div class="field">
+                                <label for="mass">Средняя масса (M⨀)</label>
+                                <input type="text" id="mass" name="mass" placeholder="25" required />
+                            </div>
+
+                            <div class="field">
+                                <label for="luminosity">Средняя светимость (L⨀)</label>
+                                <input type="text" id="luminosity" name="luminosity" placeholder="80 000" required />
+                            </div>
+
+                            <button class="save-btn" type="submit">Опубликовать</button>
+                        </form>
+                        {{/unless}}
+
                     </div>
                 </section>
             </div>
