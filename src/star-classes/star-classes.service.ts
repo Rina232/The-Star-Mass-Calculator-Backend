@@ -3,7 +3,6 @@ import { star_class } from "./interfaces/star-class.model";
 
 const MINIO_BASE_URL = "http://localhost:9000/media";
 
-// Юникод-символы для степени (надстрочные цифры), чтобы вывести "10⁴" как текст
 const SUPERSCRIPT_DIGITS: Record<string, string> = {
     "0": "⁰",
     "1": "¹",
