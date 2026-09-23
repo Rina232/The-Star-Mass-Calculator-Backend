@@ -20,9 +20,9 @@ export class star_classes_controller {
     async getFeed(@Param("id") id?: string, @Query("next") next?: string) {
         const star_class = id
             ? next === "true"
-                ? await this.star_class_service.findNextPublished(Number(id))
-                : await this.star_class_service.findPublishedById(Number(id))
-            : await this.star_class_service.findFirstPublished();
+                ? await this.star_class_service.findNextPublishedStarClass(Number(id))
+                : await this.star_class_service.findPublishedStarClassById(Number(id))
+            : await this.star_class_service.findFirstPublishedStarClass();
 
         if (!star_class) {
             throw new NotFoundException("Спектральный класс не найден");
@@ -50,7 +50,7 @@ export class star_classes_controller {
     @Get("star_classes_add")
     @Render("star_classes_add")
     async getAddPage() {
-        const draft = await this.star_class_service.findDraftForCurrentUser();
+        const draft = await this.star_class_service.findDraftStarClassForCurrentUser();
 
         if (!draft) {
             return {
@@ -76,7 +76,7 @@ export class star_classes_controller {
         const minMass = min ? Number(min) : undefined;
         const maxMass = max ? Number(max) : undefined;
 
-        const published = await this.star_class_service.findAllPublished(minMass, maxMass);
+        const published = await this.star_class_service.findAllPublishedStarClasses(minMass, maxMass);
 
         const items = await Promise.all(
             published.map(async (star_class) => ({
@@ -96,9 +96,9 @@ export class star_classes_controller {
     @Post("star_classes_add/create")
     @Redirect("/star_classes_add", 302)
     async createDraft(@Body("title") title: string) {
-        const existingDraft = await this.star_class_service.findDraftForCurrentUser();
+        const existingDraft = await this.star_class_service.findDraftStarClassForCurrentUser();
         if (!existingDraft) {
-            await this.star_class_service.createDraft(title?.trim() || "Новый спектральный класс");
+            await this.star_class_service.createDraftStarClass(title?.trim() || "Новый спектральный класс");
         }
     }
 
@@ -109,9 +109,9 @@ export class star_classes_controller {
         @Body("mass") mass: string,
         @Body("luminosity") luminosity: string,
     ) {
-        const draft = await this.star_class_service.findDraftForCurrentUser();
+        const draft = await this.star_class_service.findDraftStarClassForCurrentUser();
         if (draft) {
-            await this.star_class_service.publishDraft(
+            await this.star_class_service.publishStarClassDraft(
                 draft.star_class_id,
                 description?.trim() || "",
                 Number(mass) || 0,

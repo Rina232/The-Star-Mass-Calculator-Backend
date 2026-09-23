@@ -6,7 +6,7 @@ import {
     JoinColumn,
     CreateDateColumn,
 } from "typeorm";
-import { app_user } from "./star-class-users.entity";
+import { star_class_user } from "./star-class-users.entity";
 
 export type star_class_status = "draft" | "published" | "deleted";
 
@@ -42,9 +42,9 @@ export class star_class {
     @Column({ name: "star_class_published_at", type: "timestamp", nullable: true })
     star_class_published_at: Date | null;
 
-    @ManyToOne(() => app_user, { onDelete: "RESTRICT", nullable: false })
+    @ManyToOne(() => star_class_user, { onDelete: "RESTRICT", nullable: false })
     @JoinColumn({ name: "star_class_creator_id" })
-    star_class_creator: app_user;
+    star_class_creator: star_class_user;
 
     @Column({ name: "star_class_creator_id" })
     star_class_creator_id: number;

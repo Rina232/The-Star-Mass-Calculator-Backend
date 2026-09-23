@@ -40,20 +40,20 @@ export class star_classes_service {
     ) {}
 
 
-    async findFirstPublished(): Promise<star_class | null> {
+    async findFirstPublishedStarClass(): Promise<star_class | null> {
         return this.starClassRepository.findOne({
             where: { star_class_status: "published" },
             order: { star_class_id: "ASC" },
         });
     }
 
-    async findPublishedById(id: number): Promise<star_class | null> {
+    async findPublishedStarClassById(id: number): Promise<star_class | null> {
         return this.starClassRepository.findOne({
             where: { star_class_id: id, star_class_status: "published" },
         });
     }
 
-    async findNextPublished(afterId: number): Promise<star_class | null> {
+    async findNextPublishedStarClass(afterId: number): Promise<star_class | null> {
         const list = await this.starClassRepository.find({
             where: { star_class_status: "published" },
             order: { star_class_id: "ASC" },
@@ -68,7 +68,7 @@ export class star_classes_service {
         return list[(index + 1) % list.length];
     }
 
-    async findAllPublished(minMass?: number, maxMass?: number): Promise<star_class[]> {
+    async findAllPublishedStarClasses(minMass?: number, maxMass?: number): Promise<star_class[]> {
         const qb = this.starClassRepository
             .createQueryBuilder("sc")
             .where("sc.star_class_status = :status", { status: "published" });
@@ -83,13 +83,13 @@ export class star_classes_service {
         return qb.orderBy("sc.star_class_id", "ASC").getMany();
     }
 
-    async findDraftForCurrentUser(): Promise<star_class | null> {
+    async findDraftStarClassForCurrentUser(): Promise<star_class | null> {
         return this.starClassRepository.findOne({
             where: { star_class_status: "draft", star_class_creator_id: CURRENT_USER_ID },
         });
     }
 
-    async createDraft(title: string): Promise<star_class> {
+    async createDraftStarClass(title: string): Promise<star_class> {
         const draft = this.starClassRepository.create({
             star_class_title: title,
             star_class_description: "",
@@ -103,7 +103,7 @@ export class star_classes_service {
         return this.starClassRepository.save(draft);
     }
 
-    async publishDraft(
+    async publishStarClassDraft(
         id: number,
         description: string,
         mass: number,

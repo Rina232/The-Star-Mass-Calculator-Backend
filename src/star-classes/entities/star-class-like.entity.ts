@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Column, Unique } from "typeorm";
-import { app_user } from "./star-class-users.entity";
+import { star_class_user } from "./star-class-users.entity";
 import { star_class } from "./star-class.entity";
 
 @Entity("star_class_likes")
@@ -8,9 +8,9 @@ export class star_class_like {
     @PrimaryGeneratedColumn({ name: "star_class_like_id" })
     star_class_like_id: number;
 
-    @ManyToOne(() => app_user, { onDelete: "RESTRICT", nullable: false })
+    @ManyToOne(() => star_class_user, { onDelete: "RESTRICT", nullable: false })
     @JoinColumn({ name: "star_class_user_id" })
-    star_class_user: app_user;
+    star_class_user: star_class_user;
 
     @Column({ name: "star_class_user_id" })
     star_class_user_id: number;
