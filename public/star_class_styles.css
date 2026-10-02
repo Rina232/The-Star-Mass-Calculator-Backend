@@ -6,6 +6,7 @@
     --gold-transperent: rgb(212, 168, 50, 0.1);
     --gold-transperent-border: rgba(212, 168, 50, 0.28);
     --gold-transperent-text: rgba(212, 168, 50, 0.85);
+    --gold-button-text: rgb(36, 27, 6);
     --gold-hover: rgb(230, 192, 118);
     --text-main: rgba(220, 235, 255, 0.92);
     --text-side: rgba(185, 210, 255, 0.85);
@@ -122,13 +123,14 @@ body {
     width: 60px;
     display: flex;
     flex-direction: column;
+    margin-top: 75px;
     align-items: center;
     gap: 22px;
 }
 
 .like-btn {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background: rgba(10, 12, 30, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -138,8 +140,8 @@ body {
     cursor: pointer;
 }
 .like-btn svg {
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     stroke: var(--text-main);
     fill: none;
     stroke-width: 1.6;
@@ -150,8 +152,8 @@ body {
 }
 
 .icon-btn {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background: rgba(10, 12, 30, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -161,14 +163,14 @@ body {
 }
 
 .icon-desc {
-    font-size: 15px;
+    font-size: 13px;
     color: var(--text-main);
-    margin-top: -20px;
-    margin-bottom: -8px;
+    margin-top: -23px;
+    margin-bottom: -15px;
 }
 
 .icon-name {
-    font-size: 17px;
+    font-size: 13px;
     color: var(--text-main);
     margin-top: -13px;
     margin-bottom: -13px;
@@ -335,7 +337,7 @@ body {
     background: var(--gold);
     border: none;
     border-radius: var(--radius);
-    color: #241b06;
+    color: var(--gold-button-text);
     font-family: inherit;
     font-size: 15px;
     font-weight: 700;
@@ -404,21 +406,21 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
-    background: var(--gold-transperent);
-    border: 1px solid var(--gold-transperent-border);
+    background: var(--gold);
+    border: 1px solid var(--gold);
     border-radius: var(--radius);
-    color: var(--gold-transperent-text);
+    color: var(--gold-button-text);
     font-family: inherit;
     font-size: 12px;
     font-weight: 700;
-    padding: 0 14px;
+    padding: 0 13px 0 13px;
     cursor: pointer;
 }
 
 .search-btn svg {
     width: 15px;
     height: 15px;
-    stroke: #241b06;
+    stroke: var(--gold-button-text);
     fill: none;
     stroke-width: 2;
 }
@@ -444,29 +446,6 @@ body {
     display: block;
     text-decoration: none;
     color: inherit;
-}
-
-.card-delete-form {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    z-index: 3;
-    margin: 0;
-}
-
-.card-delete-btn {
-    width: 26px;
-    height: 26px;
-    border: none;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    cursor: pointer;
-}
-.card-delete-btn svg {
-    stroke: var(--text-main);
 }
 
 .card-thumb-img {
@@ -535,16 +514,31 @@ body {
     color: var(--text-main);
 }
 
+.card-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.card-delete-form {
+    margin: 0;
+    display: inline-flex;
+}
+
 .card-btn {
     background: var(--gold);
     border: none;
     border-radius: 6px;
-    color: #241b06;
+    color: var(--gold-button-text);
     font-family: inherit;
-    font-size: 12px;
+    font-size: 9px;
     font-weight: 700;
-    padding: 4px 15px;
+    padding: 4px 8px;
     cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    white-space: nowrap;
 }
 .card-btn:hover {
     background: var(--gold-hover);
@@ -710,7 +704,8 @@ body {
 
 .range-search-btn {
     flex: 0 0 auto;
-    height: 28px;
+    margin-top: 15px;
+    height: 23px;
 }
 
 .catalog-empty {
