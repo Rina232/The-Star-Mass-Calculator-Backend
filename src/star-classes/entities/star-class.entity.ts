@@ -18,22 +18,22 @@ export class star_class {
     @Column({ name: "star_class_title", type: "varchar", length: 150 })
     star_class_title: string;
 
-    @Column({ name: "star_class_description", type: "varchar", length: 500, default: "" })
+    @Column({ name: "star_class_description", type: "varchar", length: 500, nullable: true })
     star_class_description: string;
 
     @Column({ name: "star_class_status", type: "varchar", length: 20, default: "draft" })
     star_class_status: star_class_status;
 
-    @Column({ name: "star_class_image_url", type: "varchar", length: 255, default: "" })
+    @Column({ name: "star_class_image_url", type: "varchar", length: 255 })
     star_class_image_url: string;
 
-    @Column({ name: "star_class_video_url", type: "varchar", length: 255, default: "" })
+    @Column({ name: "star_class_video_url", type: "varchar", length: 255 })
     star_class_video_url: string;
 
-    @Column({ name: "star_class_mass", type: "numeric", precision: 10, scale: 2, default: 0 })
+    @Column({ name: "star_class_mass", type: "numeric", precision: 10, scale: 2, nullable: true  })
     star_class_mass: number;
 
-    @Column({ name: "star_class_luminosity", type: "numeric", precision: 12, scale: 2, default: 0 })
+    @Column({ name: "star_class_luminosity", type: "numeric", precision: 12, scale: 2, nullable: true })
     star_class_luminosity: number;
 
     @CreateDateColumn({ name: "star_class_created_at", type: "timestamp" })

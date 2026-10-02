@@ -7,4 +7,7 @@ export class star_class_user {
 
     @Column({ name: "star_class_username", type: "varchar", length: 50, unique: true })
     star_class_username: string;
+
+    @Column({ name: "star_class_password", type: "varchar", length: 50 })
+    star_class_password: string;
 }

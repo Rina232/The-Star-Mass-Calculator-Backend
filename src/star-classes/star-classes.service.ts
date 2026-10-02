@@ -92,12 +92,9 @@ export class star_classes_service {
     async createDraftStarClass(title: string): Promise<star_class> {
         const draft = this.starClassRepository.create({
             star_class_title: title,
-            star_class_description: "",
             star_class_status: "draft",
             star_class_image_url: "",
             star_class_video_url: "",
-            star_class_mass: 0,
-            star_class_luminosity: 0,
             star_class_creator_id: CURRENT_USER_ID,
         });
         return this.starClassRepository.save(draft);
