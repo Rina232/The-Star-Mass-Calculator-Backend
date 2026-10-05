@@ -3,6 +3,9 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { join } from "path";
 import { star_classes_module } from "./star-classes/star-classes.module";
+import { CommonModule } from "./common/common.module";
+import { UsersApiModule } from "./users-api/users-api.module";
+import { star_classes_api_module } from "./star-classes-api/star-classes-api.module";
 
 @Module({
     imports: [
@@ -25,6 +28,9 @@ import { star_classes_module } from "./star-classes/star-classes.module";
             }),
         }),
         star_classes_module,
+        CommonModule,
+        UsersApiModule,
+        star_classes_api_module,
     ],
 })
 export class AppModule {}
