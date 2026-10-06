@@ -17,7 +17,7 @@ export class UsersApiService {
             where: { star_class_username: dto.username },
         });
         if (existing) {
-            throw new ConflictException("Пользователь с таким именем уже существует");
+            throw new ConflictException();
         }
 
         const user = this.userRepository.create({

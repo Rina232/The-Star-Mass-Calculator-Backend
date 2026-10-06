@@ -3,7 +3,7 @@ import { Type } from "class-transformer";
 
 export class PublishStarClassDto {
     @IsString()
-    @MinLength(3, { message: "Описание должно быть не менее 3 символов" })
+    @MinLength(3)
     @MaxLength(500)
     description: string;
 

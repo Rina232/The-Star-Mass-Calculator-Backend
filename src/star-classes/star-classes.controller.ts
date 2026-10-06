@@ -25,7 +25,7 @@ export class star_classes_controller {
             : await this.star_class_service.findFirstPublishedStarClass();
 
         if (!star_class) {
-            throw new NotFoundException("Спектральный класс не найден");
+            throw new NotFoundException();
         }
 
         const rawLikeCount = await this.star_class_service.getLikeCount(star_class.star_class_id);

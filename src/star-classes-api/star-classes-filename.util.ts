@@ -22,8 +22,7 @@ export function generateStarClassFileName(originalFileName: string, titleHint: s
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-+|-+$/g, "") || "star-class";
 
-    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1_000_000)}`;
-    const nameWithoutExtension = `${slug}-${uniqueSuffix}`;
+    const nameWithoutExtension = slug;
 
     return extension ? `${nameWithoutExtension}.${extension}` : nameWithoutExtension;
 }

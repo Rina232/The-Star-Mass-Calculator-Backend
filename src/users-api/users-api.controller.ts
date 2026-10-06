@@ -17,13 +17,13 @@ export class UsersApiController {
     @Post("login")
     @HttpCode(HttpStatus.OK)
     login() {
-        return { message: "Аутентификация будет реализована в лабораторной работе №4" };
+        return;
     }
 
     // POST /api/users/logout заглушка
     @Post("logout")
     @HttpCode(HttpStatus.OK)
     logout() {
-        return { message: "Деавторизация будет реализована в лабораторной работе №4" };
+        return;
     }
 }

@@ -3,7 +3,11 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Добавить</title>
+        {{#unless hasDraft}}
+        <title>Создание черновика класса</title>
+        {{else}}
+        <title>Публикация класса</title>
+        {{/unless}}
         <link rel="stylesheet" href="/star_class_styles.css" />
     </head>
     <body>
@@ -13,7 +17,7 @@
                     <div class="form-panel">
 
                         {{#unless hasDraft}}
-                        <h1 class="form-title"> Добавление нового<br/>класса </h1>
+                        <h1 class="form-title">Создание черновика<br/>класса </h1>
 
                         <form id="addForm" action="/star_classes_add/create" method="POST">
                             <div class="field media-field">
@@ -52,7 +56,7 @@
                         </form>
 
                         {{else}}
-                        <h1 class="form-title"> Добавление<br/>класса </h1>
+                        <h1 class="form-title">Публикация<br/>класса</h1>
 
                         <form id="publishForm" action="/star_classes_add/publish" method="POST">
                             <div class="field media-field">

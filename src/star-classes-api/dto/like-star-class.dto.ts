@@ -3,6 +3,6 @@ import { Type } from "class-transformer";
 
 export class LikeStarClassDto {
     @Type(() => Number)
-    @IsIn([0, 1], { message: "Поле like должно быть 0 (убрать лайк) или 1 (поставить лайк)" })
+    @IsIn([0, 1])
     like: 0 | 1;
 }

@@ -9,7 +9,7 @@ export class StarClassResponseDto {
     luminosity: number | null;
     likeCount: number;
 
-    isMine: 0 | 1;
+    isMine?: 0 | 1;
 
     isLiked?: 0 | 1;
 

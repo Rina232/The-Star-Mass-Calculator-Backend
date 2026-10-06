@@ -70,19 +70,20 @@ export class star_classes_api_controller {
         return this.starClassesApiService.findFeedStarClass(id ? Number(id) : undefined, next === "true");
     }
 
-    // PUT /api/star-classes/:id/publish
-    @Put(":id/publish")
-    async publishStarClass(
-        @Param("id", ParseIntPipe) id: number,
-        @Body() dto: PublishStarClassDto,
+   // PUT /api/star-classes/draft/publish
+    @Put("draft/publish")
+    async publishDraftStarClass(
+        @Body() dto: PublishStarClassDto
     ): Promise<StarClassResponseDto> {
-        return this.starClassesApiService.publishStarClass(id, dto);
+        return this.starClassesApiService.publishDraftStarClass(dto);
     }
 
     // DELETE /api/star-classes/:id
     @Delete(":id")
     @HttpCode(HttpStatus.NO_CONTENT)
-    async deleteStarClass(@Param("id", ParseIntPipe) id: number): Promise<void> {
+    async deleteStarClass(
+        @Param("id", ParseIntPipe) id: number
+    ): Promise<void> {
         await this.starClassesApiService.deleteStarClass(id);
     }
 

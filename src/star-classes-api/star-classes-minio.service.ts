@@ -10,7 +10,7 @@ export class star_classes_minio_service {
     private readonly bucketName: string;
 
     constructor(private readonly configService: ConfigService) {
-        this.bucketName = this.configService.get<string>("MINIO_BUCKET", "star-classes");
+        this.bucketName = this.configService.get<string>("MINIO_BUCKET", "media");
 
         this.minioClient = new Minio.Client({
             endPoint: this.configService.get<string>("MINIO_ENDPOINT", "localhost"),
@@ -31,7 +31,7 @@ export class star_classes_minio_service {
                 this.logger.log(`Бакет "${this.bucketName}" создан в Minio`);
             }
         } catch (error) {
-            this.logger.error("Не удалось создать/проверить бакет Minio", error);
+            this.logger.error(error);
         }
     }
 
@@ -56,7 +56,7 @@ export class star_classes_minio_service {
         try {
             await this.minioClient.removeObject(this.bucketName, fileName);
         } catch (error) {
-            this.logger.warn(`Не удалось удалить файл "${fileName}" из Minio`, error);
+            this.logger.warn(error);
         }
     }
 }

@@ -40,7 +40,7 @@ export class star_classes_api_service {
 
         const starClasses = await query.orderBy("star_class.star_class_id", "ASC").getMany();
 
-        return Promise.all(starClasses.map((sc) => this.toStarClassResponseDto(sc, currentUserId)));
+        return Promise.all(starClasses.map((sc) => this.toStarClassResponseDto(sc, currentUserId, false, true)));
     }
 
     async createDraftStarClass(
@@ -54,9 +54,7 @@ export class star_classes_api_service {
             where: { star_class_status: "draft", star_class_creator_id: currentUserId },
         });
         if (existingDraft) {
-            throw new ConflictException(
-                "У вас уже есть черновик. Получите его через GET /api/star-classes/draft",
-            );
+            throw new ConflictException();
         }
         let imageUrl = "";
         let videoUrl = "";
@@ -105,7 +103,7 @@ export class star_classes_api_service {
               });
 
         if (!starClass) {
-            throw new NotFoundException("Спектральный класс не найден");
+            throw new NotFoundException();
         }
 
         return this.toStarClassResponseDto(starClass, currentUserId, true);
@@ -134,31 +132,28 @@ export class star_classes_api_service {
         });
 
         if (!draft) {
-            throw new NotFoundException("Черновик не найден");
+            throw new NotFoundException();
         }
 
         return this.toStarClassResponseDto(draft, currentUserId);
     }
 
-    async publishStarClass(id: number, dto: PublishStarClassDto): Promise<StarClassResponseDto> {
+    async publishDraftStarClass(dto: PublishStarClassDto): Promise<StarClassResponseDto> {
         const currentUserId = this.currentUserService.getCurrentUserId();
 
         const draft = await this.starClassRepository.findOne({
             where: {
-                star_class_id: id,
                 star_class_creator_id: currentUserId,
                 star_class_status: "draft",
             },
         });
 
         if (!draft) {
-            throw new NotFoundException(
-                "Черновик с таким id не найден (либо он не ваш, либо уже опубликован)",
-            );
+            throw new NotFoundException();
         }
 
         await this.starClassRepository.update(
-            { star_class_id: id },
+            { star_class_id: draft.star_class_id },
             {
                 star_class_description: dto.description,
                 star_class_mass: dto.mass,
@@ -169,7 +164,7 @@ export class star_classes_api_service {
         );
 
         const publishedStarClass = await this.starClassRepository.findOneOrFail({
-            where: { star_class_id: id },
+            where: { star_class_id: draft.star_class_id },
         });
 
         return this.toStarClassResponseDto(publishedStarClass, currentUserId);
@@ -183,7 +178,7 @@ export class star_classes_api_service {
         });
 
         if (!starClass || starClass.star_class_status === "deleted") {
-            throw new NotFoundException("Услуга не найдена, не ваша или уже удалена");
+            throw new NotFoundException();
         }
 
         await this.starClassRepository.update(
@@ -199,7 +194,7 @@ export class star_classes_api_service {
             where: { star_class_id: id, star_class_status: "published" },
         });
         if (!starClass) {
-            throw new NotFoundException("Спектральный класс не найден");
+            throw new NotFoundException();
         }
 
         const existingLike = await this.starClassLikeRepository.findOne({
@@ -225,6 +220,7 @@ export class star_classes_api_service {
         starClass: star_class,
         currentUserId: number,
         withLikedFlag = false,
+        withMineFlag = false,
     ): Promise<StarClassResponseDto> {
         const likeCount = await this.starClassLikeRepository.count({
             where: { star_class_id: starClass.star_class_id },
@@ -244,10 +240,13 @@ export class star_classes_api_service {
             mass: starClass.star_class_mass,
             luminosity: starClass.star_class_luminosity,
             likeCount,
-            isMine: starClass.star_class_creator_id === currentUserId ? 1 : 0,
             createdAt: starClass.star_class_created_at,
             publishedAt: starClass.star_class_published_at,
         };
+
+        if (withMineFlag) {
+            dto.isMine = starClass.star_class_creator_id === currentUserId ? 1 : 0;
+        }
 
         if (withLikedFlag) {
             const liked = await this.starClassLikeRepository.findOne({
