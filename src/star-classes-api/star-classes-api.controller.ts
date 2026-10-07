@@ -60,11 +60,11 @@ export class star_classes_api_controller {
     }
 
     // GET /api/star-classes/feed
-    // GET /api/star-classes/feed/:id
-    // GET /api/star-classes/feed/:id?next=true
-    @Get(["feed", "feed/:id"])
+    // GET /api/star-classes/feed?id=1
+    // GET /api/star-classes/feed?id=1&next=true
+    @Get("feed")
     async getFeedStarClass(
-        @Param("id") id?: string,
+        @Query("id") id?: string,
         @Query("next") next?: string,
     ): Promise<StarClassResponseDto> {
         return this.starClassesApiService.findFeedStarClass(id ? Number(id) : undefined, next === "true");
