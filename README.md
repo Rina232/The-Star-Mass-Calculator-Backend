@@ -34,9 +34,9 @@
 | 2 | `POST` | `/api/star-classes` | `form-data`: `title`, `image`, `video` | `201` | Создаёт черновик. Файлы грузятся в Minio под латинским именем, у пользователя может быть не больше одного черновика. |
 | 3 | `GET` | `/api/star-classes/draft` | — | `200` | Черновик текущего пользователя, id не указывается. |
 | 4 | `PUT` | `/api/star-classes/draft/publish` | `{ "description": string, "mass": number, "luminosity": number }` | `200` | Меняет статус draft на published, обратного перехода нет. Публиковать можно только свой черновик. |
-| 5 | `GET` | `/api/star-classes/feed` | — | `200` | Первая опубликованная услуга с флагом `isLiked: 0\|1`. |
-| 6 | `GET` | `/api/star-classes/feed/:id?next=true` | — | `200` | Конкретная строка по id, либо следующая за ней, если next=true, с флагом `isLiked: 0\|1`.|
-| 7 | `DELETE` | `/api/star-classes/:id` | — | `204` | Soft delete только своей услуги. |
+| 5 | `GET` | `/api/star-classes/feed` | — | `200` | Первый опубликованный класс с флагом `isLiked: 0\|1`. |
+| 6 | `GET` | `/api/star-classes/feed/:id?next=true` | — | `200` | Конкретная карточка по id, либо следующая за ней, если next=true, с флагом `isLiked: 0\|1`.|
+| 7 | `DELETE` | `/api/star-classes/:id` | — | `204` | Soft delete только своего спектрального класса. |
 | 8 | `POST` | `/api/star-classes/:id/like` | `{ "like": 0 \| 1 }` | `200` | Лайк/снятие лайка от текущего пользователя. |
 
 ---
