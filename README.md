@@ -72,4 +72,4 @@
 | `star_class_user_id` | integer | FK |
 | `star_class_id` | integer | FK |
 
-**Связи:** `star_class_users (1) — (∞) star_classes`, `star_class_likes (∞) — (1) star_classes`, `star_class_users (1) — (∞) star_class_likes`.
+**Связи:** `star_class_users (1) — (М) star_classes`, `star_class_likes (М) — (1) star_classes`, `star_class_users (1) — (М) star_class_likes`.
