@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { join } from "path";
 import { star_classes_module } from "./star-classes/star-classes.module";
-import { CommonModule } from "./common/common.module";
+import { star_classes_auth_module } from "./star-classes-auth/star-classes-auth.module";
 import { UsersApiModule } from "./users-api/users-api.module";
 import { star_classes_api_module } from "./star-classes-api/star-classes-api.module";
 
@@ -28,7 +28,7 @@ import { star_classes_api_module } from "./star-classes-api/star-classes-api.mod
             }),
         }),
         star_classes_module,
-        CommonModule,
+        star_classes_auth_module,
         UsersApiModule,
         star_classes_api_module,
     ],

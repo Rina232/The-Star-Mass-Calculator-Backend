@@ -3,7 +3,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { star_class } from "../star-classes/entities/star-class.entity";
 import { star_class_like } from "../star-classes/entities/star-class-like.entity";
-import { CurrentUserService } from "../common/current-user.service";
 import { StarClassFilterDto } from "./dto/star-class-filter.dto";
 import { StarClassResponseDto } from "./dto/star-class-response.dto";
 import { CreateStarClassDto } from "./dto/create-star-class.dto";
@@ -20,13 +19,13 @@ export class star_classes_api_service {
         private readonly starClassRepository: Repository<star_class>,
         @InjectRepository(star_class_like)
         private readonly starClassLikeRepository: Repository<star_class_like>,
-        private readonly currentUserService: CurrentUserService,
         private readonly starClassMinioService: star_classes_minio_service,
     ) {}
 
-    async findPublishedStarClasses(filter: StarClassFilterDto): Promise<StarClassResponseDto[]> {
-        const currentUserId = this.currentUserService.getCurrentUserId();
-
+    async findPublishedStarClasses(
+        filter: StarClassFilterDto,
+        currentUserId: number | null,
+    ): Promise<StarClassResponseDto[]> {
         const query = this.starClassRepository
             .createQueryBuilder("star_class")
             .where("star_class.star_class_status = :status", { status: "published" });
@@ -40,16 +39,17 @@ export class star_classes_api_service {
 
         const starClasses = await query.orderBy("star_class.star_class_id", "ASC").getMany();
 
-        return Promise.all(starClasses.map((sc) => this.toStarClassResponseDto(sc, currentUserId, false, true)));
+        return Promise.all(
+            starClasses.map((sc) => this.toStarClassResponseDto(sc, currentUserId, false, true)),
+        );
     }
 
     async createDraftStarClass(
         dto: CreateStarClassDto,
+        currentUserId: number,
         imageFile?: Express.Multer.File,
         videoFile?: Express.Multer.File,
     ): Promise<StarClassResponseDto> {
-        const currentUserId = this.currentUserService.getCurrentUserId();
-
         const existingDraft = await this.starClassRepository.findOne({
             where: { star_class_status: "draft", star_class_creator_id: currentUserId },
         });
@@ -88,9 +88,11 @@ export class star_classes_api_service {
         return this.toStarClassResponseDto(savedDraft, currentUserId);
     }
 
-    async findFeedStarClass(id?: number, next?: boolean): Promise<StarClassResponseDto> {
-        const currentUserId = this.currentUserService.getCurrentUserId();
-
+    async findFeedStarClass(
+        currentUserId: number | null,
+        id?: number,
+        next?: boolean,
+    ): Promise<StarClassResponseDto> {
         const starClass = id
             ? next
                 ? await this.findNextPublishedStarClass(id)
@@ -124,9 +126,7 @@ export class star_classes_api_service {
         return list[(index + 1) % list.length];
     }
 
-    async findDraftStarClass(): Promise<StarClassResponseDto> {
-        const currentUserId = this.currentUserService.getCurrentUserId();
-
+    async findDraftStarClass(currentUserId: number): Promise<StarClassResponseDto> {
         const draft = await this.starClassRepository.findOne({
             where: { star_class_status: "draft", star_class_creator_id: currentUserId },
         });
@@ -138,9 +138,10 @@ export class star_classes_api_service {
         return this.toStarClassResponseDto(draft, currentUserId);
     }
 
-    async publishDraftStarClass(dto: PublishStarClassDto): Promise<StarClassResponseDto> {
-        const currentUserId = this.currentUserService.getCurrentUserId();
-
+    async publishDraftStarClass(
+        dto: PublishStarClassDto,
+        currentUserId: number,
+    ): Promise<StarClassResponseDto> {
         const draft = await this.starClassRepository.findOne({
             where: {
                 star_class_creator_id: currentUserId,
@@ -170,9 +171,7 @@ export class star_classes_api_service {
         return this.toStarClassResponseDto(publishedStarClass, currentUserId);
     }
 
-    async deleteStarClass(id: number): Promise<void> {
-        const currentUserId = this.currentUserService.getCurrentUserId();
-
+    async deleteStarClass(id: number, currentUserId: number): Promise<void> {
         const starClass = await this.starClassRepository.findOne({
             where: { star_class_id: id, star_class_creator_id: currentUserId },
         });
@@ -187,9 +186,11 @@ export class star_classes_api_service {
         );
     }
 
-    async setStarClassLike(id: number, like: 0 | 1): Promise<StarClassResponseDto> {
-        const currentUserId = this.currentUserService.getCurrentUserId();
-
+    async setStarClassLike(
+        id: number,
+        like: 0 | 1,
+        currentUserId: number,
+    ): Promise<StarClassResponseDto> {
         const starClass = await this.starClassRepository.findOne({
             where: { star_class_id: id, star_class_status: "published" },
         });
@@ -218,7 +219,7 @@ export class star_classes_api_service {
 
     private async toStarClassResponseDto(
         starClass: star_class,
-        currentUserId: number,
+        currentUserId: number | null,
         withLikedFlag = false,
         withMineFlag = false,
     ): Promise<StarClassResponseDto> {
@@ -245,14 +246,19 @@ export class star_classes_api_service {
         };
 
         if (withMineFlag) {
-            dto.isMine = starClass.star_class_creator_id === currentUserId ? 1 : 0;
+            dto.isMine =
+                currentUserId !== null && starClass.star_class_creator_id === currentUserId ? 1 : 0;
         }
 
         if (withLikedFlag) {
-            const liked = await this.starClassLikeRepository.findOne({
-                where: { star_class_user_id: currentUserId, star_class_id: starClass.star_class_id },
-            });
-            dto.isLiked = liked ? 1 : 0;
+            if (currentUserId === null) {
+                dto.isLiked = 0;
+            } else {
+                const liked = await this.starClassLikeRepository.findOne({
+                    where: { star_class_user_id: currentUserId, star_class_id: starClass.star_class_id },
+                });
+                dto.isLiked = liked ? 1 : 0;
+            }
         }
 
         return dto;

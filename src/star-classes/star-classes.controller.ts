@@ -9,8 +9,10 @@ import {
     Redirect,
     Render,
 } from "@nestjs/common";
+import { ApiExcludeController } from "@nestjs/swagger";
 import { star_classes_service } from "./star-classes.service";
 
+@ApiExcludeController()
 @Controller()
 export class star_classes_controller {
     constructor(private readonly star_class_service: star_classes_service) {}
