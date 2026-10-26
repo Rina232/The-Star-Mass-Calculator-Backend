@@ -28,7 +28,6 @@ export class star_classes_minio_service {
             const exists = await this.minioClient.bucketExists(this.bucketName);
             if (!exists) {
                 await this.minioClient.makeBucket(this.bucketName, "us-east-1");
-                this.logger.log(`Бакет "${this.bucketName}" создан в Minio`);
             }
         } catch (error) {
             this.logger.error(error);

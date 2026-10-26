@@ -28,8 +28,8 @@ export class UsersApiController {
     // POST /api/users/register
     @Post("register")
     @ApiOperation({ summary: "Регистрация нового пользователя" })
-    @ApiCreatedResponse({ type: UserResponseDto, description: "Пользователь создан" })
-    @ApiConflictResponse({ description: "Пользователь с таким именем уже существует" })
+    @ApiCreatedResponse({ type: UserResponseDto })
+    @ApiConflictResponse()
     async register(@Body() dto: RegisterUserDto): Promise<UserResponseDto> {
         return this.usersApiService.register(dto);
     }
@@ -38,13 +38,9 @@ export class UsersApiController {
     @Post("login")
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
-        summary: "Аутентификация",
-        description:
-            "Проверяет имя и пароль, создаёт сессию в Redis и выдаёт cookie sessionId (HttpOnly). " +
-            "Браузер (в том числе Swagger UI) автоматически отправляет эту cookie во всех следующих запросах.",
-    })
-    @ApiOkResponse({ type: UserResponseDto, description: "Вход выполнен, cookie sessionId установлена" })
-    @ApiUnauthorizedResponse({ description: "Неверное имя пользователя или пароль" })
+        summary: "Аутентификация" })
+    @ApiOkResponse({ type: UserResponseDto })
+    @ApiUnauthorizedResponse()
     async login(
         @Body() dto: LoginUserDto,
         @Res({ passthrough: true }) response: Response,
@@ -52,8 +48,8 @@ export class UsersApiController {
         const { sessionId, user } = await this.usersApiService.login(dto);
 
         response.cookie(STAR_CLASSES_SESSION_COOKIE, sessionId, {
-            httpOnly: true, // кука недоступна из JavaScript страницы - защита от XSS
-            secure: false, // true включают только при работе по HTTPS
+            httpOnly: true,
+            secure: false,
             sameSite: "lax",
             maxAge: STAR_CLASSES_SESSION_TTL_SECONDS * 1000,
         });
@@ -67,17 +63,15 @@ export class UsersApiController {
     @UseGuards(star_classes_session_guard)
     @ApiCookieAuth()
     @ApiOperation({
-        summary: "Деавторизация",
-        description: "Удаляет сессию из Redis и очищает cookie. Требует авторизации.",
+        summary: "Деавторизация"
     })
-    @ApiOkResponse({ description: "Сессия удалена" })
-    @ApiUnauthorizedResponse({ description: "Нет действующей сессии" })
+    @ApiOkResponse()
+    @ApiUnauthorizedResponse()
     async logout(
         @Req() request: star_classes_request,
         @Res({ passthrough: true }) response: Response,
-    ): Promise<{ message: string }> {
+    ) {
         await this.usersApiService.logout(request.cookies?.[STAR_CLASSES_SESSION_COOKIE]);
         response.clearCookie(STAR_CLASSES_SESSION_COOKIE);
-        return { message: "Вы вышли из системы" };
     }
 }

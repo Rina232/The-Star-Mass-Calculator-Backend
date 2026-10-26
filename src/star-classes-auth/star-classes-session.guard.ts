@@ -11,12 +11,12 @@ export class star_classes_session_guard implements CanActivate {
 
         const sessionId = request.cookies?.[STAR_CLASSES_SESSION_COOKIE];
         if (!sessionId) {
-            throw new UnauthorizedException("Требуется авторизация");
+            throw new UnauthorizedException();
         }
 
         const session = await this.sessionService.findStarClassSession(sessionId);
         if (!session) {
-            throw new UnauthorizedException("Сессия недействительна или истекла");
+            throw new UnauthorizedException();
         }
 
         request.currentUserId = session.userId;

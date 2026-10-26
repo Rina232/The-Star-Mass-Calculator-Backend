@@ -36,11 +36,6 @@ async function bootstrap() {
 
     const swaggerConfig = new DocumentBuilder()
         .setTitle("Star Classes API")
-        .setDescription(
-            "REST API спектральных классов звёзд. Чтение (список, лента) доступно гостю. " +
-                "Методы создателя требуют авторизации: сначала выполните POST /api/users/login - " +
-                "браузер сохранит cookie sessionId и Swagger будет отправлять её автоматически.",
-        )
         .setVersion("1.0")
         .addCookieAuth("sessionId")
         .build();

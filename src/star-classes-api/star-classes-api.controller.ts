@@ -61,10 +61,7 @@ export class star_classes_api_controller {
     @Get()
     @UseGuards(star_classes_optional_session_guard)
     @ApiOperation({
-        summary: "Список опубликованных услуг с фильтром по массе",
-        description:
-            "Доступен без авторизации. Поле isMine = 1, если создатель услуги - текущий пользователь " +
-            "(для гостя всегда 0).",
+        summary: "Список опубликованных услуг с фильтром по массе"
     })
     @ApiOkResponse({ type: StarClassResponseDto, isArray: true })
     async getPublishedStarClasses(
@@ -80,16 +77,12 @@ export class star_classes_api_controller {
     @Get("feed")
     @UseGuards(star_classes_optional_session_guard)
     @ApiOperation({
-        summary: "Лента: опубликованная услуга",
-        description:
-            "Доступна без авторизации. Без параметров - первая услуга; ?id=N - услуга с этим id; " +
-            "?id=N&next=true - следующая после N. Поле isLiked = 1, если текущий пользователь " +
-            "уже лайкнул услугу (для гостя всегда 0).",
+        summary: "Лента"
     })
     @ApiQuery({ name: "id", required: false, type: Number, example: 1 })
     @ApiQuery({ name: "next", required: false, type: Boolean, example: true })
     @ApiOkResponse({ type: StarClassResponseDto })
-    @ApiNotFoundResponse({ description: "Услуга не найдена" })
+    @ApiNotFoundResponse()
     async getFeedStarClass(
         @StarClassesCurrentUserId() currentUserId: number | null,
         @Query("id") id?: string,
@@ -108,26 +101,22 @@ export class star_classes_api_controller {
     @UseInterceptors(starClassFileUploadInterceptor)
     @ApiCookieAuth()
     @ApiOperation({
-        summary: "Создание черновика с фото и видео",
-        description:
-            "Файлы загружаются в MinIO под сгенерированным латинским именем. Создатель берётся " +
-            "из сессии. У пользователя не может быть больше одного черновика.",
-    })
+        summary: "Создание черновика с фото и видео"})
     @ApiConsumes("multipart/form-data")
     @ApiBody({
         schema: {
             type: "object",
             required: ["title"],
             properties: {
-                title: { type: "string", example: "Спектральный класс F" },
+                title: { type: "string", example: "Тестовый класс" },
                 image: { type: "string", format: "binary" },
                 video: { type: "string", format: "binary" },
             },
         },
     })
     @ApiCreatedResponse({ type: StarClassResponseDto })
-    @ApiConflictResponse({ description: "У пользователя уже есть черновик" })
-    @ApiUnauthorizedResponse({ description: "Требуется авторизация" })
+    @ApiConflictResponse()
+    @ApiUnauthorizedResponse()
     async createDraftStarClass(
         @Body() dto: CreateStarClassDto,
         @UploadedFiles() files: { image?: Express.Multer.File[]; video?: Express.Multer.File[] },
@@ -146,12 +135,11 @@ export class star_classes_api_controller {
     @UseGuards(star_classes_session_guard)
     @ApiCookieAuth()
     @ApiOperation({
-        summary: "Получить свой черновик",
-        description: "У пользователя не более одного черновика, поэтому id не указывается.",
+        summary: "Получить свой черновик"
     })
     @ApiOkResponse({ type: StarClassResponseDto })
-    @ApiNotFoundResponse({ description: "Черновика нет" })
-    @ApiUnauthorizedResponse({ description: "Требуется авторизация" })
+    @ApiNotFoundResponse()
+    @ApiUnauthorizedResponse()
     async getDraftStarClass(
         @StarClassesCurrentUserId() currentUserId: number,
     ): Promise<StarClassResponseDto> {
@@ -163,12 +151,10 @@ export class star_classes_api_controller {
     @UseGuards(star_classes_session_guard)
     @ApiCookieAuth()
     @ApiOperation({
-        summary: "Опубликовать свой черновик",
-        description: "Меняет статус draft -> published и заполняет описание, массу и светимость.",
-    })
+        summary: "Опубликовать свой черновик"})
     @ApiOkResponse({ type: StarClassResponseDto })
-    @ApiNotFoundResponse({ description: "Черновика нет" })
-    @ApiUnauthorizedResponse({ description: "Требуется авторизация" })
+    @ApiNotFoundResponse()
+    @ApiUnauthorizedResponse()
     async publishDraftStarClass(
         @Body() dto: PublishStarClassDto,
         @StarClassesCurrentUserId() currentUserId: number,
@@ -182,13 +168,11 @@ export class star_classes_api_controller {
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiCookieAuth()
     @ApiOperation({
-        summary: "Мягкое удаление своей услуги",
-        description: "Статус меняется на deleted, запись остаётся в БД. Только услуги этого пользователя.",
-    })
+        summary: "Soft-delete своей услуги"})
     @ApiParam({ name: "id", type: Number, example: 1 })
-    @ApiNoContentResponse({ description: "Услуга удалена" })
-    @ApiNotFoundResponse({ description: "Своей услуги с таким id нет" })
-    @ApiUnauthorizedResponse({ description: "Требуется авторизация" })
+    @ApiNoContentResponse()
+    @ApiNotFoundResponse()
+    @ApiUnauthorizedResponse()
     async deleteStarClass(
         @Param("id", ParseIntPipe) id: number,
         @StarClassesCurrentUserId() currentUserId: number,
@@ -196,18 +180,17 @@ export class star_classes_api_controller {
         await this.starClassesApiService.deleteStarClass(id, currentUserId);
     }
 
-    // POST /api/star-classes/:id/like  (body: { "like": 0 | 1 })
+    // POST /api/star-classes/:id/like
     @Post(":id/like")
     @UseGuards(star_classes_session_guard)
     @ApiCookieAuth()
     @ApiOperation({
         summary: "Поставить или убрать лайк",
-        description: "like = 1 ставит лайк, like = 0 отменяет. Лайк от текущего пользователя.",
     })
     @ApiParam({ name: "id", type: Number, example: 1 })
     @ApiOkResponse({ type: StarClassResponseDto })
-    @ApiNotFoundResponse({ description: "Опубликованной услуги с таким id нет" })
-    @ApiUnauthorizedResponse({ description: "Требуется авторизация" })
+    @ApiNotFoundResponse()
+    @ApiUnauthorizedResponse()
     async setStarClassLike(
         @Param("id", ParseIntPipe) id: number,
         @Body() dto: LikeStarClassDto,

@@ -21,7 +21,7 @@ export class UsersApiService {
             where: { star_class_username: dto.username },
         });
         if (existing) {
-            throw new ConflictException("Пользователь с таким именем уже существует");
+            throw new ConflictException();
         }
 
         const user = this.userRepository.create({
@@ -39,7 +39,7 @@ export class UsersApiService {
         });
 
         if (!user || user.star_class_password !== dto.password) {
-            throw new UnauthorizedException("Неверное имя пользователя или пароль");
+            throw new UnauthorizedException();
         }
 
         const sessionId = randomUUID();

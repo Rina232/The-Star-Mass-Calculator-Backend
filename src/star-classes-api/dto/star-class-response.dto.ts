@@ -4,10 +4,10 @@ export class StarClassResponseDto {
     @ApiProperty({ example: 1 })
     id: number;
 
-    @ApiProperty({ example: "Спектральный класс O" })
+    @ApiProperty({ example: "Тестовый класс" })
     title: string;
 
-    @ApiProperty({ type: String, nullable: true })
+    @ApiProperty({  example: "Тестовое описание", type: String, nullable: true })
     description: string | null;
 
     @ApiProperty({ enum: ["draft", "published", "deleted"] })
@@ -29,14 +29,12 @@ export class StarClassResponseDto {
     likeCount: number;
 
     @ApiPropertyOptional({
-        enum: [0, 1],
-        description: "Только в списке: 1, если создатель услуги - текущий пользователь",
+        enum: [0, 1]
     })
     isMine?: 0 | 1;
 
     @ApiPropertyOptional({
-        enum: [0, 1],
-        description: "Только в ленте и после лайка: 1, если текущий пользователь лайкнул услугу",
+        enum: [0, 1]
     })
     isLiked?: 0 | 1;
 
